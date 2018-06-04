@@ -65,7 +65,7 @@ import org.w3c.dom.Node;
 																																																																// Transform
 																																																																// step
 																																																																// category
-		documentationUrl = "https://help.pentaho.com")
+		documentationUrl = "https://github.com/nadment/pdi-coalesce/wiki")
 @InjectionSupported(localizationPrefix = "CoalesceMeta.Injection.", groups = { "FIELDS" })
 public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
