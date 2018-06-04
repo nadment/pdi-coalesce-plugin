@@ -88,7 +88,7 @@
 		
 
 
-		<!-- SWT is required to compile,inorder to work with architecture -->
+		<!-- SWT is required to compile, in order to work with architecture -->
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
