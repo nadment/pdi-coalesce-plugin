@@ -21,6 +21,8 @@ public class CoalesceMetaInjectionTest extends BaseMetadataInjectionTest<Coalesc
 			}
 		});
 
+		//TODO: REMOVE_INPUT_FIELDS
+		
 //		check("NAME", new StringGetter() {
 //			@Override
 //			public String get() {
