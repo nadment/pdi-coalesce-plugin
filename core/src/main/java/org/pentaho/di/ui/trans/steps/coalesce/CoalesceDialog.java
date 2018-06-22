@@ -16,7 +16,9 @@
 
 package org.pentaho.di.ui.trans.steps.coalesce;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -96,10 +98,10 @@ public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
 
     wEmptyStrings.setSelection(meta.isTreatEmptyStringsAsNulls());
 
-    Coalesce[] coalesces = meta.getCoalesces();
-    for (int i = 0; i < coalesces.length; i++) {
+    List<Coalesce> coalesces = meta.getCoalesces();
+    for (int i = 0; i < coalesces.size(); i++) {
 
-      Coalesce coalesce = coalesces[i];
+      Coalesce coalesce = coalesces.get(i);
       TableItem item = wFields.getTable().getItem(i);
       item.setText(1, Const.NVL(coalesce.getName(), ""));
 
@@ -127,10 +129,12 @@ public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
 
     meta.setEmptyStringsAsNulls(wEmptyStrings.getSelection());
 
-    Coalesce[] coalesces = new Coalesce[wFields.nrNonEmpty()];
+    int count = wFields.nrNonEmpty();
+    
+    List<Coalesce> coalesces = new ArrayList<>(count);
 
     // CHECKSTYLE:Indentation:OFF
-    for (int i = 0; i < coalesces.length; i++) {
+    for (int i = 0; i < count; i++) {
       TableItem item = wFields.getNonEmpty(i);
 
       Coalesce coalesce = new Coalesce();
@@ -161,7 +165,7 @@ public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
       String isRemoveText = item.getText(3 + Coalesce.MAX_INPUT_FIELD);
       coalesce.setRemoveInputFields(CoalesceMeta.getBooleanFromString(isRemoveText));
 
-      coalesces[i] = coalesce;
+      coalesces.add(coalesce);
     }
 
     meta.setCoalesces(coalesces);
@@ -224,9 +228,9 @@ public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
     columnInfos[2 + Coalesce.MAX_INPUT_FIELD]
         .setToolTip(BaseMessages.getString(PKG, "CoalesceDialog.ColumnInfo.RemoveInputColumns.Tooltip"));
 
-    int noFieldRows = (meta.getCoalesces() != null ? meta.getCoalesces().length : 1);
+
     this.wFields = new TableView(transMeta, parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI, columnInfos,
-        noFieldRows, lsMod, props);
+    		meta.getCoalesces().size(), lsMod, props);
     this.wFields
         .setLayoutData(new FormDataBuilder().left().right(100, 0).top(wlFields, Const.MARGIN).bottom().result());
 

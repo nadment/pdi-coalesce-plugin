@@ -17,7 +17,6 @@
 package org.pentaho.di.trans.steps.coalesce;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,7 +85,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
 	/** The fields to coalesce */
 	@InjectionDeep
-	private Coalesce[] coalesces;
+	private List<Coalesce> coalesces = new ArrayList<>();
 
 	/**
 	 * additional options
@@ -136,7 +135,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	 */
 	@Override
 	public void setDefault() {
-		this.coalesces = new Coalesce[0];
+		this.coalesces = new ArrayList<>();
 		this.emptyStringsAsNulls = false;
 	}
 
@@ -152,7 +151,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	public Object clone() {
 		CoalesceMeta clone = (CoalesceMeta) super.clone();
 
-		clone.coalesces = Arrays.copyOf(coalesces, coalesces.length);
+		clone.coalesces = new ArrayList<>(coalesces); 
 
 		return clone;
 	}
@@ -191,8 +190,8 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
 			Node fields = XMLHandler.getSubNode(stepNode, "fields");
 			int count = XMLHandler.countNodes(fields, "field");
-			coalesces = new Coalesce[count];
-			for (int i = 0; i < this.coalesces.length; i++) {
+			coalesces = new ArrayList<>(count);
+			for (int i = 0; i < count; i++) {
 				Node line = XMLHandler.getSubNodeByNr(fields, "field", i);
 
 				Coalesce coalesce = new Coalesce();
@@ -203,7 +202,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 					coalesce.setInputField(j, Const.NVL(XMLHandler.getTagValue(line, getInputFieldTag(j)), ""));
 				}
 
-				coalesces[i] = coalesce;
+				coalesces.add(coalesce);
 			}
 		} catch (Exception e) {
 			throw new KettleXMLException(
@@ -218,8 +217,8 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		try {
 			repository.saveStepAttribute(id_transformation, id_step, TAG_EMPTY_IS_NULL, emptyStringsAsNulls);
 
-			for (int i = 0; i < this.coalesces.length; i++) {
-				Coalesce coalesce = this.coalesces[i];
+			for (int i = 0; i < this.coalesces.size(); i++) {
+				Coalesce coalesce = this.coalesces.get(i);
 				repository.saveStepAttribute(id_transformation, id_step, i, TAG_OUTPUT_FIELD, coalesce.getName());
 				repository.saveStepAttribute(id_transformation, id_step, i, TAG_VALUE_TYPE,
 						ValueMetaFactory.getValueMetaName(coalesce.getType()));
@@ -244,8 +243,8 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
 			int count = repository.countNrStepAttributes(id_step, TAG_OUTPUT_FIELD);
 
-			this.coalesces = new Coalesce[count];
-			for (int i = 0; i < this.coalesces.length; i++) {
+			coalesces = new ArrayList<>(count);
+			for (int i = 0; i < count; i++) {
 
 				Coalesce coalesce = new Coalesce();
 				coalesce.setName(repository.getStepAttributeString(id_step, i, TAG_OUTPUT_FIELD));
@@ -258,7 +257,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 						coalesce.setInputField(j, name);
 				}
 
-				coalesces[i] = coalesce;
+				coalesces.add(coalesce);
 			}
 		} catch (Exception e) {
 
@@ -298,15 +297,17 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 				if (coalesce.isRemoveInputFields()) {
 
 					String outputFieldName = space.environmentSubstitute(coalesce.getName());
-										
+
 					for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
 
 						String inputFieldName = coalesce.getInputField(j);
-						
-						// If input field name is recyled for output, don't remove
-						if ( inputRowMeta.indexOfValue(outputFieldName)!=-1  &&  outputFieldName.equals(inputFieldName)) continue;
-						
-						if (inputRowMeta.indexOfValue(inputFieldName) != -1 ) {
+
+						// If input field name is recyled for output, don't
+						// remove
+						if (inputRowMeta.indexOfValue(outputFieldName) != -1 && outputFieldName.equals(inputFieldName))
+							continue;
+
+						if (inputRowMeta.indexOfValue(inputFieldName) != -1) {
 							inputRowMeta.removeValueMeta(inputFieldName);
 						}
 					}
@@ -425,7 +426,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		}
 
 		// See if there something to coalesce
-		if (this.getCoalesces().length == 0) {
+		if (this.getCoalesces().isEmpty()) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_WARNING,
 					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.EmptyInStreamFields"), stepMeta));
 		} else if (!missing) {
@@ -509,11 +510,11 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		return null;
 	}
 
-	public Coalesce[] getCoalesces() {
+	public List<Coalesce> getCoalesces() {
 		return coalesces;
 	}
 
-	public void setCoalesces(Coalesce[] coalesces) {
-		this.coalesces = coalesces;
+	public void setCoalesces(List<Coalesce> coalesces) {
+		this.coalesces = (ArrayList<Coalesce>) coalesces;
 	}
 }

@@ -13,8 +13,6 @@ import org.pentaho.di.core.row.value.ValueMetaFactory;
  */
 public class Coalesce implements Cloneable {
 
-
-
   /** The target field name */
   @Injection(name = "NAME", group = "FIELDS")
   private String name;
