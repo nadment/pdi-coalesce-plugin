@@ -17,6 +17,7 @@
 package org.pentaho.di.trans.steps.coalesce;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -515,6 +516,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	}
 
 	public void setCoalesces(List<Coalesce> coalesces) {
-		this.coalesces = (ArrayList<Coalesce>) coalesces;
+		
+		this.coalesces =  ( coalesces==null) ? Collections.emptyList():coalesces;
 	}
 }
