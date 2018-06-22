@@ -515,8 +515,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		return coalesces;
 	}
 
-	public void setCoalesces(List<Coalesce> coalesces) {
-		
+	public void setCoalesces(List<Coalesce> coalesces) {		
 		this.coalesces =  ( coalesces==null) ? Collections.emptyList():coalesces;
 	}
 }
