@@ -1,0 +1,14 @@
+org\pentaho\di\ui\trans\steps\coalesce\CoalesceDialog$1.class
+org\pentaho\di\ui\trans\steps\coalesce\CoalesceDialog.class
+org\pentaho\di\ui\dialog\AbstractStepDialog.class
+org\pentaho\di\ui\dialog\AbstractStepDialog$2.class
+org\pentaho\di\ui\dialog\AbstractStepDialog$6.class
+org\pentaho\di\trans\steps\coalesce\CoalesceStep.class
+org\pentaho\di\ui\dialog\AbstractStepDialog$1.class
+org\pentaho\di\trans\steps\coalesce\CoalesceData.class
+org\pentaho\di\ui\dialog\AbstractStepDialog$5.class
+org\pentaho\di\ui\dialog\AbstractStepDialog$4.class
+org\pentaho\di\ui\dialog\AbstractStepDialog$3.class
+org\pentaho\di\trans\steps\coalesce\Coalesce.class
+org\pentaho\di\ui\trans\steps\coalesce\CoalesceDialog$2.class
+org\pentaho\di\trans\steps\coalesce\CoalesceMeta.class
