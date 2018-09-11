@@ -89,7 +89,7 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 		// in the row structure that only need to be done once
 		if (first) {
 			if (log.isDebug()) {
-				logDebug(BaseMessages.getString(PKG, "CoalesceStep.Log.StartedProcessing"));
+				logDebug(BaseMessages.getString(PKG, "CoalesceStep.Log.StartedProcessing")); //$NON-NLS-1$
 			}
 
 			first = false;
@@ -136,7 +136,7 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 				}
 				outputRowValues[outputIndex++] = result;
 			} catch (KettleValueException e) {
-				logError(BaseMessages.getString(PKG, "CoalesceStep.Log.DataIncompatibleError",
+				logError(BaseMessages.getString(PKG, "CoalesceStep.Log.DataIncompatibleError", //$NON-NLS-1$
 						row[inputIndex].toString(), inputRowMeta.getValueMeta(inputIndex).toString(), vm.toString()));
 				throw e;
 			}
@@ -146,7 +146,7 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 		putRow(data.outputRowMeta, outputRowValues);
 
 		if (log.isRowLevel()) {
-			logRowlevel(BaseMessages.getString(PKG, "CoalesceStep.Log.WroteRowToNextStep", outputRowValues));
+			logRowlevel(BaseMessages.getString(PKG, "CoalesceStep.Log.WroteRowToNextStep", outputRowValues)); //$NON-NLS-1$
 		}
 
 		// log progress if it is time to to so
@@ -173,7 +173,7 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 				}
 			}
 			if (!missingFields.isEmpty()) {
-				String errorText = BaseMessages.getString(PKG, "CoalesceStep.Log.MissingInStreamFields",
+				String errorText = BaseMessages.getString(PKG, "CoalesceStep.Log.MissingInStreamFields", //$NON-NLS-1$
 						StringUtils.join(missingFields, ','));
 				throw new KettleException(errorText);
 			}

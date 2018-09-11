@@ -76,13 +76,13 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	 */
 	private static final int STRING_AS_DEFAULT = -1;
 
-	private static final String TAG_OUTPUT_FIELD = "output_field";
+	private static final String TAG_OUTPUT_FIELD = "output_field"; //$NON-NLS-1$
 
-	private static final String TAG_VALUE_TYPE = "value_type";
+	private static final String TAG_VALUE_TYPE = "value_type"; //$NON-NLS-1$
 
-	private static final String TAG_EMPTY_IS_NULL = "empty_is_null";
+	private static final String TAG_EMPTY_IS_NULL = "empty_is_null"; //$NON-NLS-1$
 
-	private static final String TAG_REMOVE = "remove";
+	private static final String TAG_REMOVE = "remove"; //$NON-NLS-1$
 
 	/** The fields to coalesce */
 	@InjectionDeep
@@ -187,13 +187,13 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	public void loadXML(Node stepNode, List<DatabaseMeta> databases, IMetaStore metaStore) throws KettleXMLException {
 
 		try {
-			this.emptyStringsAsNulls = "Y".equalsIgnoreCase(XMLHandler.getTagValue(stepNode, TAG_EMPTY_IS_NULL));
+			this.emptyStringsAsNulls = "Y".equalsIgnoreCase(XMLHandler.getTagValue(stepNode, TAG_EMPTY_IS_NULL)); //$NON-NLS-1$
 
-			Node fields = XMLHandler.getSubNode(stepNode, "fields");
-			int count = XMLHandler.countNodes(fields, "field");
+			Node fields = XMLHandler.getSubNode(stepNode, "fields"); //$NON-NLS-1$
+			int count = XMLHandler.countNodes(fields, "field"); //$NON-NLS-1$
 			coalesces = new ArrayList<>(count);
 			for (int i = 0; i < count; i++) {
-				Node line = XMLHandler.getSubNodeByNr(fields, "field", i);
+				Node line = XMLHandler.getSubNodeByNr(fields, "field", i); //$NON-NLS-1$
 
 				Coalesce coalesce = new Coalesce();
 				coalesce.setName(Const.NVL(XMLHandler.getTagValue(line, TAG_OUTPUT_FIELD), ""));
@@ -263,7 +263,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		} catch (Exception e) {
 
 			throw new KettleException(
-					BaseMessages.getString(PKG, "CoalesceMeta.Exception.UnableToReadRepository", id_step), e);
+					BaseMessages.getString(PKG, "CoalesceMeta.Exception.UnableToReadRepository", id_step), e); //$NON-NLS-1$
 		}
 	}
 
@@ -367,20 +367,20 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		// See if we have fields from previous steps
 		if (prev == null || prev.size() == 0) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_WARNING,
-					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.NotReceivingFieldsFromPreviousSteps"),
+					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.NotReceivingFieldsFromPreviousSteps"), //$NON-NLS-1$
 					stepMeta));
 		} else {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString(PKG,
-					"CoalesceMeta.CheckResult.ReceivingFieldsFromPreviousSteps", prev.size()), stepMeta));
+					"CoalesceMeta.CheckResult.ReceivingFieldsFromPreviousSteps", prev.size()), stepMeta)); //$NON-NLS-1$
 		}
 
 		// See if there are input streams leading to this step!
 		if (input.length > 0) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_OK,
-					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.ReceivingInfoFromOtherSteps"), stepMeta));
+					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.ReceivingInfoFromOtherSteps"), stepMeta)); //$NON-NLS-1$
 		} else {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR,
-					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.NotReceivingInfoFromOtherSteps"), stepMeta));
+					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.NotReceivingInfoFromOtherSteps"), stepMeta)); //$NON-NLS-1$
 		}
 
 		// See if there are missing, duplicate or not enough input streams
@@ -409,17 +409,17 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 			}
 
 			if (!missingFields.isEmpty()) {
-				String message = BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.MissingInStreamFields",
+				String message = BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.MissingInStreamFields", //$NON-NLS-1$
 						coalesce.getName(), StringUtils.join(missingFields, ','));
 				remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, message, stepMeta));
 				missing = true;
 			} else if (!duplicateFields.isEmpty()) {
-				String message = BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.DuplicateInStreamFields",
+				String message = BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.DuplicateInStreamFields", //$NON-NLS-1$
 						coalesce.getName(), StringUtils.join(duplicateFields, ','));
 				remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, message, stepMeta));
 				missing = true;
 			} else if (fields.size() <= 1) {
-				String message = BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.NotEnoughInStreamFields",
+				String message = BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.NotEnoughInStreamFields", //$NON-NLS-1$
 						coalesce.getName());
 				remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_WARNING, message, stepMeta));
 			}
@@ -429,17 +429,17 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		// See if there something to coalesce
 		if (this.getCoalesces().isEmpty()) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_WARNING,
-					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.EmptyInStreamFields"), stepMeta));
+					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.EmptyInStreamFields"), stepMeta)); //$NON-NLS-1$
 		} else if (!missing) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_OK,
-					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.FoundInStreamFields"), stepMeta));
+					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.FoundInStreamFields"), stepMeta)); //$NON-NLS-1$
 		}
 
 	}
 
 	// TODO: Find a global function
 	public static String getStringFromBoolean(boolean b) {
-		return b ? BaseMessages.getString(PKG, "System.Combo.Yes") : BaseMessages.getString(PKG, "System.Combo.No");
+		return b ? BaseMessages.getString(PKG, "System.Combo.Yes") : BaseMessages.getString(PKG, "System.Combo.No"); 
 	}
 
 	// TODO: Find a global function
@@ -448,7 +448,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		if (Utils.isEmpty(s))
 			return false;
 
-		return BaseMessages.getString(PKG, "System.Combo.Yes").equals(s);
+		return BaseMessages.getString(PKG, "System.Combo.Yes").equals(s); //$NON-NLS-1$
 	}
 
 	/**
@@ -497,7 +497,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	}
 
 	private String getInputFieldTag(int index) {
-		return "input_field_" + (char) ('a' + index);
+		return "input_field_" + (char) ('a' + index); //$NON-NLS-1$
 	}
 
 	public Coalesce getCoalesce(final String name) {
