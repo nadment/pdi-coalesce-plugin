@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<project name="maven-antrun-" default="main"  >
-<target name="main">
-  <echo message="Installed the plugin in PDI installation in C:\pentaho\data-integration. To test, please restart Spoon."/>
-  <delete dir="C:\pentaho\data-integration/plugins/pdi-coalesce-plugin"/>
-  <mkdir dir="C:\pentaho\data-integration/plugins/pdi-coalesce-plugin"/>
-  <unzip src="C:\eclipse\workspace\pdi-coalesce\target/pdi-coalesce-plugin-1.0.0.zip" dest="C:\pentaho\data-integration/plugins/"/>
-</target>
-</project>
