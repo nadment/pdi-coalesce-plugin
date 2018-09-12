@@ -1,11 +1,11 @@
-# PDI Coalesce Plugin
+# ![Image](https://github.com/nadment/pdi-coalesce-plugin/blob/master/src/main/resources/coalesce.svg) PDI Coalesce Plugin
 
 
 ## Overview
 
 This plugin provide PDI step to return the first non-null value from a set of fields.
 
-![Image](https://github.com/nadment/pdi-coalesce-plugin/blob/master/src/main/resources/coalesce.svg)
+
 
 
 ## How to install #
