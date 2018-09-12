@@ -10,16 +10,16 @@ This plugin provide PDI step to return the first non-null value from a set of fi
 
 ## How to install #
 
-### System Requirements
+#### System Requirements
 
 Pentaho Data Integration 8.0 or above
 
-### Using Pentaho Marketplace
+#### Using Pentaho Marketplace
 
 1. Find the plugin in the [Pentaho Marketplace](http://www.pentaho.com/marketplace) and click Install
 2. Restart Spoon
 
-### Manual Install
+#### Manual Install
 
 1. Place the “pdi-coalesce-plugin” folder in the ${DI\_HOME}/plugins/ directory
 2. Restart Spoon
