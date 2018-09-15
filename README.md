@@ -5,7 +5,7 @@
 
 This plugin provide PDI step to return the first non-null value from a set of fields.
 
-![Image](https://github.com/nadment/pdi-coalesce-plugin/blob/master/src/main/resources/coalesce.svg)
+![Image](https://github.com/nadment/pdi-coalesce-plugin/blob/master/src/main/resources/coalesce.png)
 
 
 ## How to install #
