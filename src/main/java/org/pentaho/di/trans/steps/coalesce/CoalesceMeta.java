@@ -61,11 +61,8 @@ import org.w3c.dom.Node;
  * @author Nicolas ADMENT
  *
  */
-@Step(id = "Coalesce", image = "coalesce.svg", i18nPackageName = "org.pentaho.di.trans.steps.coalesce", name = "Coalesce.Name", description = "Coalesce.Description", categoryDescription = "i18n:org.pentaho.di.trans.step:BaseStep.Category.Experimental", // TODO:
-																																																																// Transform
-																																																																// step
-																																																																// category
-		documentationUrl = "https://github.com/nadment/pdi-coalesce/wiki")
+@Step(id = "Coalesce", image = "coalesce.svg", i18nPackageName = "org.pentaho.di.trans.steps.coalesce", name = "Coalesce.Name", description = "Coalesce.Description", categoryDescription = "i18n:org.pentaho.di.trans.step:BaseStep.Category.Transform", 
+		documentationUrl = "https://github.com/nadment/pdi-coalesce-plugin/wiki")
 @InjectionSupported(localizationPrefix = "CoalesceMeta.Injection.", groups = { "FIELDS" })
 public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
