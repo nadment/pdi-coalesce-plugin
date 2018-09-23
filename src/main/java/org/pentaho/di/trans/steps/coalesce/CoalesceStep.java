@@ -217,6 +217,8 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 		CoalesceMeta meta = (CoalesceMeta) smi;
 		CoalesceData data = (CoalesceData) sdi;
 
+		data.outputRowMeta = null;		
+		
 		super.dispose(meta, data);
 	}
 }
