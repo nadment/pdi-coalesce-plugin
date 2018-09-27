@@ -168,7 +168,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 			xml.append("        ").append(
 					XMLHandler.addTagValue(TAG_VALUE_TYPE, ValueMetaFactory.getValueMetaName(coalesce.getType())));
 			xml.append("        ")
-					.append(XMLHandler.addTagValue(TAG_REMOVE, getStringFromBoolean(coalesce.isRemoveInputFields())));
+					.append(XMLHandler.addTagValue(TAG_REMOVE, coalesce.isRemoveInputFields()));
 
 			for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
 				xml.append("        ").append(XMLHandler.addTagValue(getInputFieldTag(j), coalesce.getInputField(j)));
@@ -195,7 +195,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 				Coalesce coalesce = new Coalesce();
 				coalesce.setName(Const.NVL(XMLHandler.getTagValue(line, TAG_OUTPUT_FIELD), ""));
 				coalesce.setType(XMLHandler.getTagValue(line, TAG_VALUE_TYPE));
-				coalesce.setRemoveInputFields(getBooleanFromString(XMLHandler.getTagValue(line, TAG_REMOVE)));
+				coalesce.setRemoveInputFields("Y".equalsIgnoreCase(XMLHandler.getTagValue(line, TAG_REMOVE)));
 				for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
 					coalesce.setInputField(j, Const.NVL(XMLHandler.getTagValue(line, getInputFieldTag(j)), ""));
 				}
@@ -432,20 +432,6 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.FoundInStreamFields"), stepMeta)); //$NON-NLS-1$
 		}
 
-	}
-
-	// TODO: Find a global function
-	public static String getStringFromBoolean(boolean b) {
-		return b ? BaseMessages.getString(PKG, "System.Combo.Yes") : BaseMessages.getString(PKG, "System.Combo.No"); 
-	}
-
-	// TODO: Find a global function
-	public static boolean getBooleanFromString(final String s) {
-
-		if (Utils.isEmpty(s))
-			return false;
-
-		return BaseMessages.getString(PKG, "System.Combo.Yes").equals(s); //$NON-NLS-1$
 	}
 
 	/**

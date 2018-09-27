@@ -25,7 +25,7 @@ public class Coalesce implements Cloneable {
   private boolean removeInputFields;
 
   /** Maximum number of input fields */
-  public static final int MAX_INPUT_FIELD = 5;
+  public static final int MAX_INPUT_FIELD = 6;
 
   public Coalesce() {
     super();   
