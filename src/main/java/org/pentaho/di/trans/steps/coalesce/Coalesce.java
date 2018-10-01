@@ -1,108 +1,127 @@
 package org.pentaho.di.trans.steps.coalesce;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.pentaho.di.core.injection.Injection;
 import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.core.row.value.ValueMetaFactory;
+import org.pentaho.di.core.util.Utils;
 
 /**
- * Contains the properties of the inputs fields, target field name, target value type and options.
+ * Contains the properties of the inputs fields, target field name, target value
+ * type and options.
  *
  * @author Nicolas ADMENT
  */
 public class Coalesce implements Cloneable {
 
-  /** The target field name */
-  @Injection(name = "NAME", group = "FIELDS")
-  private String name;
+	private List<String> fields = new ArrayList<>();
 
-  private String[] inputFields = new String[MAX_INPUT_FIELD];
+	private int type = ValueMetaInterface.TYPE_NONE;
 
-  private int type = ValueMetaInterface.TYPE_NONE;
+	/** The target field name */
+	@Injection(name = "NAME", group = "FIELDS")
+	private String name;
 
-  @Injection(name = "REMOVE_INPUT_FIELDS", group = "FIELDS")
-  private boolean removeInputFields;
+	@Injection(name = "TYPE", group = "FIELDS")
+	public void setType(final String name) {
+		this.type = ValueMetaFactory.getIdForValueMeta(name);
+	}
 
-  /** Maximum number of input fields */
-  public static final int MAX_INPUT_FIELD = 6;
+	@Injection(name = "INPUT_FIELDS", group = "FIELDS")
+	public void setInputFields(final String fields) {
 
-  public Coalesce() {
-    super();   
-  }
-  
-  @Override
-  public Object clone() {
-    Coalesce clone;
-    try {
-      clone = (Coalesce) super.clone();
-      clone.inputFields = Arrays.copyOf(inputFields, MAX_INPUT_FIELD);
-      
-    } catch (CloneNotSupportedException e) {
-      return null;
-    }
-    return clone;
-  }
+		this.fields = new ArrayList<>();
 
-  public String getName() {
-    return name;
-  }
+		if (fields != null) {
+			for (String field : fields.split("\\s*,\\s*")) {
+				this.addInputField(field);
+			}
+		}
+	}
 
-  public void setName(String name) {
-    this.name = name;
-  }
+	@Injection(name = "REMOVE_INPUT_FIELDS", group = "FIELDS")
+	private boolean removeFields;
 
-  public String[] getInputFields() {
-    return this.inputFields;
-  }
+	public Coalesce() {
+		super();
+	}
 
-  public String getInputField(int index) {
-    return this.inputFields[index];
-  }
+	@Override
+	public Object clone() {
+		Coalesce clone;
+		try {
+			clone = (Coalesce) super.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+		return clone;
+	}
 
-  public void setInputField(final int index, final String fieldName) {
-    this.inputFields[index] = fieldName;
-  }
+	public String getName() {
+		return name;
+	}
 
-  public void setInputFields(final String... fieldNames) {
-        
-    for (int index=0; index<MAX_INPUT_FIELD; index++) {
-        if ( index<fieldNames.length) {
-          this.inputFields[index] = fieldNames[index];          
-        }
-        else 
-          this.inputFields[index] = null;      
-    }
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-  
-  public int getType() {
-    return this.type;
-  }
+	public List<String> getInputFields() {
+		return this.fields;
+	}
 
-  public void setType(final int type) {
-    this.type = type;
-  }
+	public String getInputField(int index) {
+		return this.fields.get(index);
+	}
 
-  private String getTypeDesc() {
-    return ValueMetaFactory.getValueMetaName(this.type);    
-  }
+	public void addInputField(final String field) {
+		// Remove empty field
+		if (Utils.isEmpty(field))
+			return;
 
-  @Injection(name = "TYPE", group = "FIELDS")
-  public void setType(final String name) {
-    this.type = ValueMetaFactory.getIdForValueMeta(name);
-  }
+		this.fields.add(field);
+	}
 
-  public boolean isRemoveInputFields() {
-    return this.removeInputFields;
-  }
+	public void removeInputField(final String field) {
+		this.fields.remove(field);
+	}
 
-  public void setRemoveInputFields(boolean remove) {
-    this.removeInputFields = remove;
-  }
+	public void setInputFields(final List<String> fields) {
 
-  @Override
-  public String toString() {
-    return name + ":" + getTypeDesc() ;
-  }
+		if (fields == null)
+			this.fields = new ArrayList<>();
+		else
+			this.fields = fields;
+	}
+
+	public int getType() {
+		return this.type;
+	}
+
+	public void setType(final int type) {
+		this.type = type;
+	}
+
+	private String getTypeDesc() {
+		return ValueMetaFactory.getValueMetaName(this.type);
+	}
+
+	/**
+	 * Remove inpute fields
+	 * 
+	 * @return
+	 */
+	public boolean isRemoveFields() {
+		return this.removeFields;
+	}
+
+	public void setRemoveFields(boolean remove) {
+		this.removeFields = remove;
+	}
+
+	@Override
+	public String toString() {
+		return name + ":" + getTypeDesc();
+	}
 }

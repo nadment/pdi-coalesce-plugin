@@ -38,7 +38,6 @@ import org.pentaho.di.core.injection.InjectionSupported;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.core.row.value.ValueMetaFactory;
-import org.pentaho.di.core.util.Utils;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.core.xml.XMLHandler;
 import org.pentaho.di.i18n.BaseMessages;
@@ -61,8 +60,7 @@ import org.w3c.dom.Node;
  * @author Nicolas ADMENT
  *
  */
-@Step(id = "Coalesce", image = "coalesce.svg", i18nPackageName = "org.pentaho.di.trans.steps.coalesce", name = "Coalesce.Name", description = "Coalesce.Description", categoryDescription = "i18n:org.pentaho.di.trans.step:BaseStep.Category.Transform", 
-		documentationUrl = "https://github.com/nadment/pdi-coalesce-plugin/wiki")
+@Step(id = "Coalesce", image = "coalesce.svg", i18nPackageName = "org.pentaho.di.trans.steps.coalesce", name = "Coalesce.Name", description = "Coalesce.Description", categoryDescription = "i18n:org.pentaho.di.trans.step:BaseStep.Category.Transform", documentationUrl = "https://github.com/nadment/pdi-coalesce-plugin/wiki")
 @InjectionSupported(localizationPrefix = "CoalesceMeta.Injection.", groups = { "FIELDS" })
 public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
@@ -71,14 +69,10 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	/**
 	 * Constants:
 	 */
-	private static final int STRING_AS_DEFAULT = -1;
-
-	private static final String TAG_OUTPUT_FIELD = "output_field"; //$NON-NLS-1$
-
+	private static final String TAG_NAME = "name"; //$NON-NLS-1$
+	private static final String TAG_FIELD = "field"; //$NON-NLS-1$
 	private static final String TAG_VALUE_TYPE = "value_type"; //$NON-NLS-1$
-
 	private static final String TAG_EMPTY_IS_NULL = "empty_is_null"; //$NON-NLS-1$
-
 	private static final String TAG_REMOVE = "remove"; //$NON-NLS-1$
 
 	/** The fields to coalesce */
@@ -149,7 +143,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	public Object clone() {
 		CoalesceMeta clone = (CoalesceMeta) super.clone();
 
-		clone.coalesces = new ArrayList<>(coalesces); 
+		clone.coalesces = new ArrayList<>(coalesces);
 
 		return clone;
 	}
@@ -159,23 +153,25 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
 		StringBuilder xml = new StringBuilder(500);
 
-		xml.append("    ").append(XMLHandler.addTagValue(TAG_EMPTY_IS_NULL, emptyStringsAsNulls));
+		xml.append(XMLHandler.addTagValue(TAG_EMPTY_IS_NULL, emptyStringsAsNulls));
 
-		xml.append("    <fields>").append(Const.CR);
+		xml.append("<fields>"); //$NON-NLS-1$
 		for (Coalesce coalesce : coalesces) {
-			xml.append("      <field>").append(Const.CR);
-			xml.append("        ").append(XMLHandler.addTagValue(TAG_OUTPUT_FIELD, coalesce.getName()));
-			xml.append("        ").append(
-					XMLHandler.addTagValue(TAG_VALUE_TYPE, ValueMetaFactory.getValueMetaName(coalesce.getType())));
-			xml.append("        ")
-					.append(XMLHandler.addTagValue(TAG_REMOVE, coalesce.isRemoveInputFields()));
+			xml.append("<field>"); //$NON-NLS-1$
 
-			for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
-				xml.append("        ").append(XMLHandler.addTagValue(getInputFieldTag(j), coalesce.getInputField(j)));
+			xml.append(XMLHandler.addTagValue(TAG_NAME, coalesce.getName()));
+			xml.append(XMLHandler.addTagValue(TAG_VALUE_TYPE, ValueMetaFactory.getValueMetaName(coalesce.getType())));
+			xml.append(XMLHandler.addTagValue(TAG_REMOVE, coalesce.isRemoveFields()));
+
+			xml.append("<input>"); //$NON-NLS-1$
+			for (String field : coalesce.getInputFields()) {
+				xml.append(XMLHandler.addTagValue(TAG_FIELD, field));
 			}
-			xml.append("      </field>").append(Const.CR);
+			xml.append("</input>"); //$NON-NLS-1$
+
+			xml.append("</field>"); //$NON-NLS-1$
 		}
-		xml.append("    </fields>").append(Const.CR);
+		xml.append("</fields>"); //$NON-NLS-1$
 
 		return xml.toString();
 	}
@@ -193,11 +189,17 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 				Node line = XMLHandler.getSubNodeByNr(fields, "field", i); //$NON-NLS-1$
 
 				Coalesce coalesce = new Coalesce();
-				coalesce.setName(Const.NVL(XMLHandler.getTagValue(line, TAG_OUTPUT_FIELD), ""));
+				coalesce.setName(Const.NVL(XMLHandler.getTagValue(line, TAG_NAME), ""));
 				coalesce.setType(XMLHandler.getTagValue(line, TAG_VALUE_TYPE));
-				coalesce.setRemoveInputFields("Y".equalsIgnoreCase(XMLHandler.getTagValue(line, TAG_REMOVE)));
-				for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
-					coalesce.setInputField(j, Const.NVL(XMLHandler.getTagValue(line, getInputFieldTag(j)), ""));
+				coalesce.setRemoveFields("Y".equalsIgnoreCase(XMLHandler.getTagValue(line, TAG_REMOVE)));
+
+				Node input = XMLHandler.getSubNode(line, "input"); //$NON-NLS-1$
+				if (input != null) {
+					Node field = input.getFirstChild();
+					while (field != null) {
+						coalesce.addInputField(XMLHandler.getNodeValue(field));
+						field = field.getNextSibling();
+					}
 				}
 
 				coalesces.add(coalesce);
@@ -217,14 +219,13 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
 			for (int i = 0; i < this.coalesces.size(); i++) {
 				Coalesce coalesce = this.coalesces.get(i);
-				repository.saveStepAttribute(id_transformation, id_step, i, TAG_OUTPUT_FIELD, coalesce.getName());
+				repository.saveStepAttribute(id_transformation, id_step, i, TAG_NAME, coalesce.getName());
 				repository.saveStepAttribute(id_transformation, id_step, i, TAG_VALUE_TYPE,
 						ValueMetaFactory.getValueMetaName(coalesce.getType()));
-				repository.saveStepAttribute(id_transformation, id_step, i, TAG_REMOVE, coalesce.isRemoveInputFields());
+				repository.saveStepAttribute(id_transformation, id_step, i, TAG_REMOVE, coalesce.isRemoveFields());
 
-				for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
-					repository.saveStepAttribute(id_transformation, id_step, i, getInputFieldTag(j),
-							coalesce.getInputField(j));
+				for (int j = 0; j < coalesce.getInputFields().size(); j++) {
+					repository.saveStepAttribute(id_transformation, id_step, i, TAG_FIELD, coalesce.getInputField(j));
 				}
 			}
 		} catch (Exception e) {
@@ -239,23 +240,22 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		try {
 			this.emptyStringsAsNulls = repository.getStepAttributeBoolean(id_step, TAG_EMPTY_IS_NULL);
 
-			int count = repository.countNrStepAttributes(id_step, TAG_OUTPUT_FIELD);
+			int count = repository.countNrStepAttributes(id_step, TAG_NAME);
 
-			coalesces = new ArrayList<>(count);
+			this.coalesces = new ArrayList<>(count);
 			for (int i = 0; i < count; i++) {
 
 				Coalesce coalesce = new Coalesce();
-				coalesce.setName(repository.getStepAttributeString(id_step, i, TAG_OUTPUT_FIELD));
+				coalesce.setName(repository.getStepAttributeString(id_step, i, TAG_NAME));
 				coalesce.setType(repository.getStepAttributeString(id_step, i, TAG_VALUE_TYPE));
-				coalesce.setRemoveInputFields(repository.getStepAttributeBoolean(id_step, i, TAG_REMOVE));
+				coalesce.setRemoveFields(repository.getStepAttributeBoolean(id_step, i, TAG_REMOVE));
 
-				for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
-					String name = repository.getStepAttributeString(id_step, i, getInputFieldTag(j));
-					if (!Utils.isEmpty(name))
-						coalesce.setInputField(j, name);
+				int countInput = repository.countNrStepAttributes(id_step, TAG_FIELD);
+				for (int j = 0; j < countInput; j++) {
+					coalesce.addInputField(repository.getStepAttributeString(id_step, i, TAG_FIELD));
 				}
 
-				coalesces.add(coalesce);
+				this.coalesces.add(coalesce);
 			}
 		} catch (Exception e) {
 
@@ -292,21 +292,20 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
 			// first remove all unwanted input fields from the stream
 			for (Coalesce coalesce : this.getCoalesces()) {
-				if (coalesce.isRemoveInputFields()) {
 
-					String outputFieldName = space.environmentSubstitute(coalesce.getName());
+				if (coalesce.isRemoveFields()) {
 
-					for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
+					String name = space.environmentSubstitute(coalesce.getName());
 
-						String inputFieldName = coalesce.getInputField(j);
+					for (String fieldName : coalesce.getInputFields()) {
 
-						// If input field name is recyled for output, don't
+						// If input field name is recycled for output, don't
 						// remove
-						if (inputRowMeta.indexOfValue(outputFieldName) != -1 && outputFieldName.equals(inputFieldName))
+						if (inputRowMeta.indexOfValue(name) != -1 && name.equals(fieldName))
 							continue;
 
-						if (inputRowMeta.indexOfValue(inputFieldName) != -1) {
-							inputRowMeta.removeValueMeta(inputFieldName);
+						if (inputRowMeta.indexOfValue(fieldName) != -1) {
+							inputRowMeta.removeValueMeta(fieldName);
 						}
 					}
 				}
@@ -319,11 +318,11 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 					type = findDefaultValueType(unalteredInputRowMeta, coalesce);
 				}
 
-				String outputFieldName = space.environmentSubstitute(coalesce.getName());
-				ValueMetaInterface valueMeta = ValueMetaFactory.createValueMeta(outputFieldName, type);
+				String name = space.environmentSubstitute(coalesce.getName());
+				ValueMetaInterface valueMeta = ValueMetaFactory.createValueMeta(name, type);
 				valueMeta.setOrigin(stepName);
 
-				int index = inputRowMeta.indexOfValue(outputFieldName);
+				int index = inputRowMeta.indexOfValue(name);
 				if (index >= 0) {
 					inputRowMeta.setValueMeta(index, valueMeta);
 				} else {
@@ -388,21 +387,18 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 			List<String> missingFields = new ArrayList<String>();
 			List<String> duplicateFields = new ArrayList<String>();
 
-			for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
-				String fieldName = coalesce.getInputField(j);
+			for (String fieldName : coalesce.getInputFields()) {
 
-				if (!Utils.isEmpty(fieldName)) {
+				if (fields.contains(fieldName))
+					duplicateFields.add(fieldName);
+				else
+					fields.add(fieldName);
 
-					if (fields.contains(fieldName))
-						duplicateFields.add(fieldName);
-					else
-						fields.add(fieldName);
-
-					ValueMetaInterface vmi = prev.searchValueMeta(fieldName);
-					if (vmi == null) {
-						missingFields.add(fieldName);
-					}
+				ValueMetaInterface vmi = prev.searchValueMeta(fieldName);
+				if (vmi == null) {
+					missingFields.add(fieldName);
 				}
+
 			}
 
 			if (!missingFields.isEmpty()) {
@@ -415,7 +411,12 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 						coalesce.getName(), StringUtils.join(duplicateFields, ','));
 				remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, message, stepMeta));
 				missing = true;
-			} else if (fields.size() <= 1) {
+			} else if (fields.size() == 0) {
+				String message = BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.EmptyInStreamFields", //$NON-NLS-1$
+						coalesce.getName());
+				remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, message, stepMeta));
+				missing = true;
+			} else if (fields.size() < 2) {
 				String message = BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.NotEnoughInStreamFields", //$NON-NLS-1$
 						coalesce.getName());
 				remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_WARNING, message, stepMeta));
@@ -426,7 +427,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		// See if there something to coalesce
 		if (this.getCoalesces().isEmpty()) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_WARNING,
-					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.EmptyInStreamFields"), stepMeta)); //$NON-NLS-1$
+					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.NothingToCoalesce"), stepMeta)); //$NON-NLS-1$
 		} else if (!missing) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_OK,
 					BaseMessages.getString(PKG, "CoalesceMeta.CheckResult.FoundInStreamFields"), stepMeta)); //$NON-NLS-1$
@@ -435,70 +436,106 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	}
 
 	/**
-	 * If all 3 fields are of the same data type then the output field should
+	 * If all fields are of the same data type then the output field should
 	 * mirror this otherwise return a more generic String type
 	 */
 	private int findDefaultValueType(final RowMetaInterface inputRowMeta, final Coalesce coalesce) throws Exception {
 
-		Integer valueType = null;
-		int i = 0;
-		do {
-			if (i == 0) {
-				valueType = getInputFieldValueType(inputRowMeta, coalesce, i++);
-			}
-			Integer type = getInputFieldValueType(inputRowMeta, coalesce, i);
+		int type = ValueMetaInterface.TYPE_NONE;
+		boolean first = true;
 
-			if ((valueType = getResultingType(valueType, type)) == STRING_AS_DEFAULT) {
-				return ValueMetaInterface.TYPE_STRING;
-			}
-		} while (++i < Coalesce.MAX_INPUT_FIELD);
+		for (String field : coalesce.getInputFields()) {
 
-		return valueType;
+			if (first) {
+				type = getInputFieldValueType(inputRowMeta, field);
+				first = false;
+			} else {
+				int otherType = getInputFieldValueType(inputRowMeta, field);
+
+				if (type != otherType) {
+
+					switch (type) {
+					case ValueMetaInterface.TYPE_STRING:
+						// keep TYPE_STRING
+						break;
+					case ValueMetaInterface.TYPE_INTEGER:
+						if (otherType == ValueMetaInterface.TYPE_NUMBER) {
+							type = ValueMetaInterface.TYPE_NUMBER;
+						} else if (otherType == ValueMetaInterface.TYPE_BIGNUMBER) {
+							type = ValueMetaInterface.TYPE_BIGNUMBER;
+						} else {
+							type = ValueMetaInterface.TYPE_STRING;
+						}
+						break;
+					case ValueMetaInterface.TYPE_NUMBER:
+						if (otherType == ValueMetaInterface.TYPE_INTEGER) {
+							// keep TYPE_NUMBER
+						} else if (otherType == ValueMetaInterface.TYPE_BIGNUMBER) {
+							type = ValueMetaInterface.TYPE_BIGNUMBER;
+						} else {
+							type = ValueMetaInterface.TYPE_STRING;
+						}
+						break;
+
+					case ValueMetaInterface.TYPE_DATE:
+						if (otherType == ValueMetaInterface.TYPE_TIMESTAMP) {
+							type = ValueMetaInterface.TYPE_TIMESTAMP;
+						} else {
+							type = ValueMetaInterface.TYPE_STRING;
+						}
+						break;
+					case ValueMetaInterface.TYPE_TIMESTAMP:
+						if (otherType == ValueMetaInterface.TYPE_DATE) {
+							// keep TYPE_TIMESTAMP
+						} else {
+							type = ValueMetaInterface.TYPE_STRING;
+						}
+						break;
+					case ValueMetaInterface.TYPE_BIGNUMBER:
+						if (otherType == ValueMetaInterface.TYPE_INTEGER) {
+							// keep TYPE_BIGNUMBER
+						} else if (otherType == ValueMetaInterface.TYPE_NUMBER) {
+							// keep TYPE_BIGNUMBER
+						} else {
+							type = ValueMetaInterface.TYPE_STRING;
+						}
+						break;
+					case ValueMetaInterface.TYPE_BOOLEAN:
+					case ValueMetaInterface.TYPE_INET:
+					case ValueMetaInterface.TYPE_SERIALIZABLE:
+					case ValueMetaInterface.TYPE_BINARY:
+					default:
+						return ValueMetaInterface.TYPE_STRING;
+					}
+				}
+			}
+		}
+
+		if (type == ValueMetaInterface.TYPE_NONE) {
+			type = ValueMetaInterface.TYPE_STRING;
+		}
+
+		return type;
 	}
 
 	/**
-	 * extracts the ValueMeta type of an input field, returns null if the field
-	 * is not present in the input stream
+	 * Extracts the ValueMeta type of an input field, returns
+	 * {@link ValueMetaInterface.TYPE_NONE} if the field is not present in the
+	 * input stream
 	 */
-	private Integer getInputFieldValueType(RowMetaInterface inputRowMeta, Coalesce coalesce, int inputIndex) {
-		int index = inputRowMeta.indexOfValue(coalesce.getInputField(inputIndex));
-		if (index > 0) {
+	private int getInputFieldValueType(final RowMetaInterface inputRowMeta, final String field) {
+		int index = inputRowMeta.indexOfValue(field);
+		if (index >= 0) {
 			return inputRowMeta.getValueMeta(index).getType();
 		}
-		return null;
-	}
-
-	private Integer getResultingType(Integer typeA, Integer typeB) {
-		if (typeA == null) {
-			return typeB;
-		} else {
-			if (typeB == null) {
-				return typeA;
-			}
-			return typeA.equals(typeB) ? typeA : STRING_AS_DEFAULT;
-		}
-	}
-
-	private String getInputFieldTag(int index) {
-		return "input_field_" + (char) ('a' + index); //$NON-NLS-1$
-	}
-
-	public Coalesce getCoalesce(final String name) {
-		if (name != null) {
-			for (Coalesce coalesce : this.getCoalesces()) {
-				if (name.equals(coalesce.getName()))
-					return coalesce;
-
-			}
-		}
-		return null;
+		return ValueMetaInterface.TYPE_NONE;
 	}
 
 	public List<Coalesce> getCoalesces() {
 		return coalesces;
 	}
 
-	public void setCoalesces(List<Coalesce> coalesces) {		
-		this.coalesces =  ( coalesces==null) ? Collections.emptyList():coalesces;
+	public void setCoalesces(List<Coalesce> coalesces) {
+		this.coalesces = (coalesces == null) ? Collections.emptyList() : coalesces;
 	}
 }

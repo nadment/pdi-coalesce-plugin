@@ -1,7 +1,5 @@
 package org.pentaho.di.trans.steps.coalesce;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +10,6 @@ import org.pentaho.di.core.plugins.StepPluginType;
 import org.pentaho.di.core.row.RowMeta;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMetaInterface;
-import org.pentaho.di.core.row.value.ValueMetaFactory;
 import org.pentaho.di.core.row.value.ValueMetaNumber;
 import org.pentaho.di.core.row.value.ValueMetaString;
 import org.pentaho.di.trans.step.StepMeta;
@@ -140,14 +137,8 @@ public class CoalesceStepTest {
 		Coalesce coalesce = new Coalesce();
 		coalesce.setType(valueType);
 		coalesce.setName("out");
-		coalesce.setRemoveInputFields(removeInputFields);
-
-		// input fields
-		String[] inputFields = new String[Coalesce.MAX_INPUT_FIELD];
-		for (int i = 0; i < Coalesce.MAX_INPUT_FIELD; i++) {
-			inputFields[i] = fieldNames[i];
-		}
-		coalesce.setInputFields(inputFields);
+		coalesce.setRemoveFields(removeInputFields);
+		//coalesce.setInputFields(fieldNames);
 
 		String pluginId = registry.getPluginId(StepPluginType.class, coalesceMeta);
 
@@ -173,31 +164,31 @@ public class CoalesceStepTest {
 		return rowMeta;
 	}
 
-	private void processInputTestFile(String file) throws Exception {
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(file)));
-
-		fieldNames = reader.readLine().split(",");
-		fieldTypes = reader.readLine().split(",");
-		valuesMeta = new ValueMetaInterface[Coalesce.MAX_INPUT_FIELD];
-		for (int i = 0; i < fieldNames.length; i++) {
-			valuesMeta[i] = ValueMetaFactory.createValueMeta(fieldNames[i], Integer.parseInt(fieldTypes[i]));
-		}
-
-		inputRows = new ArrayList<List<Object>>();
-		String line;
-		ValueMetaInterface stringValueMeta = new ValueMetaString("forConversionOnly");
-		while ((line = reader.readLine()) != null) {
-			String[] stringValues = parseValuesFromStringRow(line);
-			List<Object> objectValues = new ArrayList<Object>();
-			for (int i = 0; i < stringValues.length; i++) {
-				objectValues.add(valuesMeta[i].convertData(stringValueMeta, stringValues[i]));
-			}
-			inputRows.add(objectValues);
-		}
-
-		reader.close();
-	}
+//	private void processInputTestFile(String file) throws Exception {
+//		BufferedReader reader = new BufferedReader(
+//				new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(file)));
+//
+//		fieldNames = reader.readLine().split(",");
+//		fieldTypes = reader.readLine().split(",");
+//		valuesMeta = new ValueMetaInterface[Coalesce.MAX_INPUT_FIELD];
+//		for (int i = 0; i < fieldNames.length; i++) {
+//			valuesMeta[i] = ValueMetaFactory.createValueMeta(fieldNames[i], Integer.parseInt(fieldTypes[i]));
+//		}
+//
+//		inputRows = new ArrayList<List<Object>>();
+//		String line;
+//		ValueMetaInterface stringValueMeta = new ValueMetaString("forConversionOnly");
+//		while ((line = reader.readLine()) != null) {
+//			String[] stringValues = parseValuesFromStringRow(line);
+//			List<Object> objectValues = new ArrayList<Object>();
+//			for (int i = 0; i < stringValues.length; i++) {
+//				objectValues.add(valuesMeta[i].convertData(stringValueMeta, stringValues[i]));
+//			}
+//			inputRows.add(objectValues);
+//		}
+//
+//		reader.close();
+//	}
 
 	/**
 	 * Creates result data.

@@ -127,7 +127,7 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 			int inputIndex = getFirstNonNullValueIndex(meta, inputRowMeta, row, coalesce);
 
 			outputIndex = data.outputRowMeta.indexOfValue(coalesce.getName());
-						
+
 			ValueMetaInterface vm = data.outputRowMeta.getValueMeta(outputIndex);
 			try {
 				Object result = null;
@@ -163,8 +163,9 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 
 		for (Coalesce coalesce : meta.getCoalesces()) {
 			List<String> missingFields = new ArrayList<String>();
-			for (int j = 0; j < Coalesce.MAX_INPUT_FIELD; j++) {
-				String field = coalesce.getInputField(j);
+
+			for (String field : coalesce.getInputFields()) {
+
 				if (!Utils.isEmpty(field)) {
 					ValueMetaInterface vmi = prev.searchValueMeta(field);
 					if (vmi == null) {
@@ -186,9 +187,9 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 	private int getFirstNonNullValueIndex(final CoalesceMeta meta, final RowMetaInterface inputRowMeta, Object[] row,
 			Coalesce coalesce) {
 
-		for (int i = 0; i < Coalesce.MAX_INPUT_FIELD; i++) {
+		for (String field : coalesce.getInputFields()) {
 
-			int index = inputRowMeta.indexOfValue(coalesce.getInputField(i));
+			int index = inputRowMeta.indexOfValue(field);
 			if (index >= 0) {
 				if (!meta.isTreatEmptyStringsAsNulls() && row[index] != null) {
 					return index;
@@ -217,8 +218,8 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 		CoalesceMeta meta = (CoalesceMeta) smi;
 		CoalesceData data = (CoalesceData) sdi;
 
-		data.outputRowMeta = null;		
-		
+		data.outputRowMeta = null;
+
 		super.dispose(meta, data);
 	}
 }
