@@ -11,7 +11,7 @@
 	<name>PDI Coalesce Plugin</name>
 	<groupId>org.pentaho.di.plugins</groupId>
 	<artifactId>pdi-coalesce-plugin</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<url>http://github.com/nadment/pdi-coalesce-plugin</url>
 
 	<developers>
