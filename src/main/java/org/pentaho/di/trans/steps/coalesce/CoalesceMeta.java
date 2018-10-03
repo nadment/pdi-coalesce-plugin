@@ -71,6 +71,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 	 */
 	private static final String TAG_NAME = "name"; //$NON-NLS-1$
 	private static final String TAG_FIELD = "field"; //$NON-NLS-1$
+	private static final String TAG_FIELDS = "fields"; //$NON-NLS-1$
 	private static final String TAG_VALUE_TYPE = "value_type"; //$NON-NLS-1$
 	private static final String TAG_EMPTY_IS_NULL = "empty_is_null"; //$NON-NLS-1$
 	private static final String TAG_REMOVE = "remove"; //$NON-NLS-1$
@@ -223,10 +224,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 				repository.saveStepAttribute(id_transformation, id_step, i, TAG_VALUE_TYPE,
 						ValueMetaFactory.getValueMetaName(coalesce.getType()));
 				repository.saveStepAttribute(id_transformation, id_step, i, TAG_REMOVE, coalesce.isRemoveFields());
-
-				for (int j = 0; j < coalesce.getInputFields().size(); j++) {
-					repository.saveStepAttribute(id_transformation, id_step, i, TAG_FIELD, coalesce.getInputField(j));
-				}
+				repository.saveStepAttribute(id_transformation, id_step, i, TAG_FIELDS, String.join(",", coalesce.getInputFields()));
 			}
 		} catch (Exception e) {
 			throw new KettleException(
@@ -244,17 +242,11 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
 			this.coalesces = new ArrayList<>(count);
 			for (int i = 0; i < count; i++) {
-
 				Coalesce coalesce = new Coalesce();
 				coalesce.setName(repository.getStepAttributeString(id_step, i, TAG_NAME));
 				coalesce.setType(repository.getStepAttributeString(id_step, i, TAG_VALUE_TYPE));
 				coalesce.setRemoveFields(repository.getStepAttributeBoolean(id_step, i, TAG_REMOVE));
-
-				int countInput = repository.countNrStepAttributes(id_step, TAG_FIELD);
-				for (int j = 0; j < countInput; j++) {
-					coalesce.addInputField(repository.getStepAttributeString(id_step, i, TAG_FIELD));
-				}
-
+				coalesce.setInputFields(repository.getStepAttributeString(id_step, i, TAG_FIELDS));
 				this.coalesces.add(coalesce);
 			}
 		} catch (Exception e) {
