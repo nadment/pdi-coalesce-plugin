@@ -126,7 +126,9 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 
 			int inputIndex = getFirstNonNullValueIndex(meta, inputRowMeta, row, coalesce);
 
-			outputIndex = data.outputRowMeta.indexOfValue(coalesce.getName());
+			// Resolve variable name
+			String name = this.environmentSubstitute(coalesce.getName());		
+			outputIndex = data.outputRowMeta.indexOfValue(name);
 
 			ValueMetaInterface vm = data.outputRowMeta.getValueMeta(outputIndex);
 			try {

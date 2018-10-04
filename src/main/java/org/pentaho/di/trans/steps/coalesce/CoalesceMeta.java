@@ -207,7 +207,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 			}
 		} catch (Exception e) {
 			throw new KettleXMLException(
-					BaseMessages.getString(PKG, "CoalesceMeta.Exception.UnableToReadStepInfoFromXML"), e);
+					BaseMessages.getString(PKG, "CoalesceMeta.Exception.UnableToReadStepInfoFromXML"), e);  //$NON-NLS-1$
 		}
 
 	}
@@ -228,7 +228,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 			}
 		} catch (Exception e) {
 			throw new KettleException(
-					BaseMessages.getString(PKG, "CoalesceMeta.Exception.UnableToSaveRepository", id_step), e);
+					BaseMessages.getString(PKG, "CoalesceMeta.Exception.UnableToSaveRepository", id_step), e); //$NON-NLS-1$
 		}
 	}
 
