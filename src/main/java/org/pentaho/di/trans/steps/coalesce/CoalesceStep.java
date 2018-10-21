@@ -99,7 +99,7 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 			// structure
 			meta.getFields(data.outputRowMeta, getStepname(), null, null, this, null, null);
 
-			checkFieldsExistUpstream(meta);
+			checkInputFieldsExist(meta);
 		}
 
 		RowMetaInterface inputRowMeta = getInputRowMeta();
@@ -160,7 +160,7 @@ public class CoalesceStep extends BaseStep implements StepInterface {
 		return true;
 	}
 
-	private void checkFieldsExistUpstream(final CoalesceMeta meta) throws KettleException {
+	private void checkInputFieldsExist(final CoalesceMeta meta) throws KettleException {
 		RowMetaInterface prev = getInputRowMeta();
 
 		for (Coalesce coalesce : meta.getCoalesces()) {

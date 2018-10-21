@@ -1,4 +1,4 @@
-package org.pentaho.di.ui.dialog;
+package org.pentaho.di.ui.trans.steps.coalesce;
 
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;

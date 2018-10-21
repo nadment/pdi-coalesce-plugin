@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.pentaho.di.core.Const;
+import org.pentaho.di.core.annotations.PluginDialog;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMetaInterface;
@@ -44,8 +45,8 @@ import org.pentaho.di.ui.core.FormDataBuilder;
 import org.pentaho.di.ui.core.widget.ColumnInfo;
 import org.pentaho.di.ui.core.widget.ColumnsResizer;
 import org.pentaho.di.ui.core.widget.TableView;
-import org.pentaho.di.ui.dialog.AbstractStepDialog;
 
+@PluginDialog ( id = "coalesce", image = "coalesce.svg", pluginType = PluginDialog.PluginType.STEP , documentationUrl = "https://github.com/nadment/pdi-coalesce-plugin/wiki")
 public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
 
 	private static Class<?> PKG = CoalesceMeta.class; // for i18n purposes
@@ -66,11 +67,11 @@ public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
 	 *            the meta object holding the step's settings
 	 * @param transMeta
 	 *            transformation description
-	 * @param sName
+	 * @param stepName
 	 *            the step name
 	 */
-	public CoalesceDialog(Shell parent, Object in, TransMeta transMeta, String sName) {
-		super(parent, in, transMeta, sName);
+	public CoalesceDialog(Shell parent, Object in, TransMeta transMeta, String stepName) {
+		super(parent, in, transMeta, stepName);
 
 		setText(BaseMessages.getString(PKG, "CoalesceDialog.Shell.Title"));
 	}

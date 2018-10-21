@@ -287,6 +287,7 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
 				if (coalesce.isRemoveFields()) {
 
+					// Resolve variable name
 					String name = space.environmentSubstitute(coalesce.getName());
 
 					for (String fieldName : coalesce.getInputFields()) {
