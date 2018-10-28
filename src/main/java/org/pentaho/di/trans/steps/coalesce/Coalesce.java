@@ -3,6 +3,7 @@ package org.pentaho.di.trans.steps.coalesce;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.injection.Injection;
 import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.core.row.value.ValueMetaFactory;
@@ -63,8 +64,8 @@ public class Coalesce implements Cloneable {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setName(final String name) {
+		this.name = StringUtils.stripToNull(name);
 	}
 
 	public List<String> getInputFields() {
@@ -76,7 +77,7 @@ public class Coalesce implements Cloneable {
 	}
 
 	public void addInputField(final String field) {
-		// Remove empty field
+		// Ignore empty field
 		if (Utils.isEmpty(field))
 			return;
 

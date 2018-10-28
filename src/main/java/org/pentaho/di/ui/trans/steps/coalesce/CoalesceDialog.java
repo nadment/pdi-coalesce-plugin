@@ -19,6 +19,7 @@ package org.pentaho.di.ui.trans.steps.coalesce;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -86,7 +87,7 @@ public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
 
 			Coalesce coalesce = coalesces.get(i);
 			TableItem item = tblFields.getTable().getItem(i);
-			item.setText(1, Const.NVL(coalesce.getName(), ""));
+			item.setText(1, StringUtils.stripToEmpty(coalesce.getName()));
 			item.setText(2, ValueMetaBase.getTypeDesc(coalesce.getType()));
 			item.setText(3, getStringFromBoolean(coalesce.isRemoveFields()));
 			item.setText(4, String.join(", ", coalesce.getInputFields()));
@@ -125,11 +126,6 @@ public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
 					Utils.isEmpty(typeValueText) ? ValueMetaInterface.TYPE_NONE : ValueMetaBase.getType(typeValueText));
 			coalesce.setRemoveFields(getBooleanFromString(item.getText(3)));
 			coalesce.setInputFields(item.getText(4));
-
-			// if (coalesce.getInputFields().size() < 2) {
-			// warnings.add(coalesce.getName());
-			// }
-
 			coalesces.add(coalesce);
 		}
 

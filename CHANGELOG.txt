@@ -1,6 +1,7 @@
 1.0.2 # nadment 2018/10/14
-- Fix error resolving variable name
 - Add @PluginDialog annotation
+- Fix error resolving variable name
+- Strip output field name
 1.0.1 # nadment 2018/10/03
 - Fix error saving step meta to repository
 1.0.0 # nadment 2018/09/11
