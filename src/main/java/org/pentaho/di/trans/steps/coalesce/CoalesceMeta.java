@@ -64,7 +64,7 @@ import org.w3c.dom.Node;
 @InjectionSupported(localizationPrefix = "CoalesceMeta.Injection.", groups = { "FIELDS" })
 public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 
-	private static Class<?> PKG = CoalesceMeta.class; // for i18n purposes
+	private static final Class<?> PKG = CoalesceMeta.class; // for i18n purposes
 
 	/**
 	 * Constants:

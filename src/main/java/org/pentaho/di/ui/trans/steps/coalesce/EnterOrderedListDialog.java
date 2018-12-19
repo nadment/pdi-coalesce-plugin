@@ -52,7 +52,7 @@ import org.pentaho.di.ui.util.ImageUtil;
  * @since 29-09-2018
  */
 public class EnterOrderedListDialog extends Dialog {
-	private static Class<?> PKG = CoalesceMeta.class;
+	private static final Class<?> PKG = CoalesceMeta.class;
 
 	public static final int LARGE_MARGIN = 15;
 

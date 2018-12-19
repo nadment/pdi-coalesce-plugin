@@ -50,7 +50,7 @@ import org.pentaho.di.ui.core.widget.TableView;
 @PluginDialog ( id = "coalesce", image = "coalesce.svg", pluginType = PluginDialog.PluginType.STEP , documentationUrl = "https://github.com/nadment/pdi-coalesce-plugin/wiki")
 public class CoalesceDialog extends AbstractStepDialog<CoalesceMeta> {
 
-	private static Class<?> PKG = CoalesceMeta.class; // for i18n purposes
+	private static final Class<?> PKG = CoalesceMeta.class; // for i18n purposes
 
 	private Button btnEmptyStrings;
 

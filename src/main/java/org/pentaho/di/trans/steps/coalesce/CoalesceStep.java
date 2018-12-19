@@ -46,7 +46,7 @@ import org.pentaho.di.trans.step.StepMetaInterface;
 
 public class CoalesceStep extends BaseStep implements StepInterface {
 
-	private static Class<?> PKG = CoalesceMeta.class;
+	private static final Class<?> PKG = CoalesceMeta.class;
 
 	public CoalesceStep(StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
 			Trans trans) {
