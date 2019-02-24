@@ -14,7 +14,7 @@
  *
  ******************************************************************************/
 
-package org.pentaho.di.ui.trans.steps.coalesce;
+package org.kettle.ui.trans.steps.coalesce;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
+import org.kettle.trans.steps.coalesce.Coalesce;
+import org.kettle.trans.steps.coalesce.CoalesceMeta;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.annotations.PluginDialog;
 import org.pentaho.di.core.exception.KettleException;
@@ -40,8 +42,6 @@ import org.pentaho.di.core.util.Utils;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.StepMeta;
-import org.pentaho.di.trans.steps.coalesce.Coalesce;
-import org.pentaho.di.trans.steps.coalesce.CoalesceMeta;
 import org.pentaho.di.ui.core.FormDataBuilder;
 import org.pentaho.di.ui.core.widget.ColumnInfo;
 import org.pentaho.di.ui.core.widget.ColumnsResizer;

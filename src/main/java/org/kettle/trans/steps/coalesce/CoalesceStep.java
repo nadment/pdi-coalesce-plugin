@@ -14,7 +14,7 @@
 *
 ******************************************************************************/
 
-package org.pentaho.di.trans.steps.coalesce;
+package org.kettle.trans.steps.coalesce;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,11 @@
-package org.pentaho.di.trans.steps.coalesce;
+package org.kettle.trans.steps.coalesce;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.kettle.trans.steps.coalesce.Coalesce;
+import org.kettle.trans.steps.coalesce.CoalesceMeta;
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.plugins.PluginRegistry;
 import org.pentaho.di.core.plugins.StepPluginType;

@@ -1,4 +1,4 @@
-package org.pentaho.di.ui.trans.steps.coalesce;
+package org.kettle.ui.trans.steps.coalesce;
 
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.kettle.trans.steps.coalesce.CoalesceMeta;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.util.Utils;
 import org.pentaho.di.i18n.BaseMessages;
-import org.pentaho.di.trans.steps.coalesce.CoalesceMeta;
 import org.pentaho.di.ui.core.ConstUI;
 import org.pentaho.di.ui.core.FormDataBuilder;
 import org.pentaho.di.ui.core.PropsUI;

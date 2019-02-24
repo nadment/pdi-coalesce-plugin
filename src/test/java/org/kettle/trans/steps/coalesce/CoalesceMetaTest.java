@@ -1,10 +1,11 @@
-package org.pentaho.di.trans.steps.coalesce;
+package org.kettle.trans.steps.coalesce;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.kettle.trans.steps.coalesce.CoalesceMeta;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.junit.rules.RestorePDIEngineEnvironment;

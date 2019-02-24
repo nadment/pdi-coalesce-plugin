@@ -1,9 +1,9 @@
-package org.pentaho.di.trans.steps.coalesce;
+package org.kettle.trans.steps.coalesce;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.kettle.trans.steps.coalesce.CoalesceMeta;
 import org.pentaho.di.core.injection.BaseMetadataInjectionTest;
-import org.pentaho.di.trans.steps.coalesce.CoalesceMeta;
 
 public class CoalesceMetaInjectionTest extends BaseMetadataInjectionTest<CoalesceMeta> {
 	@Before

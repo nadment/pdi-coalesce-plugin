@@ -14,7 +14,7 @@
  *
  ******************************************************************************/
 
-package org.pentaho.di.trans.steps.coalesce;
+package org.kettle.trans.steps.coalesce;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +60,7 @@ import org.w3c.dom.Node;
  * @author Nicolas ADMENT
  *
  */
-@Step(id = "Coalesce", image = "coalesce.svg", i18nPackageName = "org.pentaho.di.trans.steps.coalesce", name = "Coalesce.Name", description = "Coalesce.Description", categoryDescription = "i18n:org.pentaho.di.trans.step:BaseStep.Category.Transform", documentationUrl = "https://github.com/nadment/pdi-coalesce-plugin/wiki")
+@Step(id = "Coalesce", name = "Coalesce.Name", description = "Coalesce.Description", image = "coalesce.svg", i18nPackageName = "org.kettle.trans.steps.coalesce", categoryDescription = "i18n:org.pentaho.di.trans.step:BaseStep.Category.Transform")
 @InjectionSupported(localizationPrefix = "CoalesceMeta.Injection.", groups = { "FIELDS" })
 public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 

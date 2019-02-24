@@ -1,3 +1,5 @@
+1.0.3 # nadment 2019/02/24
+- move package to org.kettle
 1.0.2 # nadment 2018/10/14
 - Add @PluginDialog annotation
 - Fix error resolving variable name
