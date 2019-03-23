@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.kettle.ui.trans.steps.coalesce.CoalesceDialog;
 import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.Const;
@@ -147,6 +148,12 @@ public class CoalesceMeta extends BaseStepMeta implements StepMetaInterface {
 		clone.coalesces = new ArrayList<>(coalesces);
 
 		return clone;
+	}
+	
+	// For compatibility with 7.x
+	@Override
+	public String getDialogClassName() {
+		return CoalesceDialog.class.getName();
 	}
 
 	@Override

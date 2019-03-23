@@ -210,7 +210,7 @@
 			<groupId>pentaho-kettle</groupId>
 			<artifactId>kettle-ui-swt</artifactId>
 			<version>${pdi.version}</version>
-			<scope>provided</scope>
+			<scope>provided</scope>	
 		</dependency>
 
 		<dependency>
